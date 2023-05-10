@@ -20,6 +20,10 @@ database
     });
 
 database
+/*    .query("select * from movies")
+    .then(([movies]) => {
+        console.log(movies);
+    })*/
     .query("select * from users")
     .then(([users]) => {
         console.log(users);
@@ -27,5 +31,7 @@ database
     .catch((err) => {
         console.log(err);
     });
+
+    
 
 module.exports = database;

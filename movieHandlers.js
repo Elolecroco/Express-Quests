@@ -1,4 +1,4 @@
-const movies = [
+/* const movies = [
   {
     id: 1,
     title: "Citizen Kane",
@@ -23,7 +23,7 @@ const movies = [
     color: true,
     duration: 180,
   },
-];
+]; */
 
 const database = require("./database");
 
@@ -46,7 +46,7 @@ const getMovieById = (req, res) => {
     .query("select * from movies where id = ?", [id])
     .then(([movies]) => {
       if (movies[0] != null) {
-        res.json(movies);
+        res.json(movies[0]);
       } else {
       res.status(404).send("Not Found");
       }
@@ -57,7 +57,25 @@ const getMovieById = (req, res) => {
     })
 };
 
+const postMovie = (req, res) => {
+  const { title, director, year, color, duration } = req.body;
+
+  database
+    .query(
+      "INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)",
+      [title, director, year, color, duration]
+    )
+    .then(([result]) => {
+      res.location(`/api/movies/${result.insertId}`).sendStatus(201);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error saving the movie");
+    });
+};
+
 module.exports = {
   getMovies,
   getMovieById,
+  postMovie,
 };
